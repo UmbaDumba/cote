@@ -18,8 +18,6 @@ void sort_value_map(vector<pair<string, int>> *maps){
 
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
-    //unordered_map<int, pair<string, int>> musics; // key : index, valye : (genres, plays)
-    
     map<string, int> jplays;
     for(int i = 0; i<plays.size(); i++){
         if(jplays.find(genres[i]) == jplays.end()){
@@ -27,7 +25,6 @@ vector<int> solution(vector<string> genres, vector<int> plays) {
         }else{
             jplays[genres[i]] += plays[i];
         }
-        //musics[i] = make_pair(genres[i], plays[i]);
     }
     vector<pair<string, int>> vecplays(jplays.begin(), jplays.end());
     sort_value_map(&vecplays);
