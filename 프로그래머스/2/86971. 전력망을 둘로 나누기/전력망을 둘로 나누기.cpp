@@ -6,18 +6,8 @@
 
 using namespace std;
 
-int find_seed(vector<vector<int>> wires){
-    for(int i = 0; i<wires.size(); i++){
-        for(int j = 0; j<wires.size(); j++){
-            if(wires[i][j] == 1){
-                return i;
-            }
-        }
-    }
-    return -1;
-}
 
-int tree_count_sub(vector<vector<int>> wires){
+int tree_count_sub(vector<vector<int>> wires, int n){
     
     
     // 첫번째 트리 개수 찾기
@@ -42,28 +32,8 @@ int tree_count_sub(vector<vector<int>> wires){
     //cout << "1 : "<<count1<<endl;
     
     // 두번째 트리 개수 찾기
-    int count2 = 1;
-    queue<int> que2;
-    int n = find_seed(wires);
-    que2.push(n);
-    if(n == -1){
-        return INT_MAX;
-    }
+    int count2 = n - count1;
     
-    while(!que2.empty()){
-        int node = que2.front();
-        que2.pop();
-        for(int i = 0; i<wires.size(); i++){
-            if(wires[node][i] == 1){
-                // 연결된곳을 찾은것
-                wires[node][i] = 0;
-                wires[i][node] = 0;
-                que2.push(i);
-                count2++;
-            }
-        }
-        
-    }
     
     return abs(count1 - count2);
 }
@@ -84,7 +54,7 @@ int solution(int n, vector<vector<int>> wires) {
         test[wires[i][1]-1][wires[i][0]-1] = 0;
         // 끊기
         
-        answer = min(answer, tree_count_sub(test));
+        answer = min(answer, tree_count_sub(test, n));
         
     }
     
