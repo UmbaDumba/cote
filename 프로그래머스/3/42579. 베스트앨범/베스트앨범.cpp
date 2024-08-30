@@ -1,74 +1,45 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
 #include <map>
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 
-bool comp1(pair<string, int> a, pair<string, int> b){
+bool comp(pair<string, int> a, pair<string, int> b){
     return a.second > b.second;
 }
 
-void sort_value_map(vector<pair<string, int>> *maps){
-    sort((*maps).begin(), (*maps).end(), comp1);
-    
+bool comp2(pair<int, int> a, pair<int, int> b){
+    return a.second > b.second;
 }
+
+map<string, vector<pair<int, int>>> mymap;  // {index, plays}
+map<string, int> totalplay;
 
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
-    map<string, int> jplays;
-    for(int i = 0; i<plays.size(); i++){
-        if(jplays.find(genres[i]) == jplays.end()){
-            jplays[genres[i]] = plays[i];
+    
+    for(int i = 0; i<genres.size(); i++){
+        mymap[genres[i]].push_back({i, plays[i]});
+        if(totalplay.find(genres[i]) == totalplay.end()){
+            // 없음
+            totalplay[genres[i]] = plays[i];
         }else{
-            jplays[genres[i]] += plays[i];
+            totalplay[genres[i]] += plays[i];
         }
     }
-    vector<pair<string, int>> vecplays(jplays.begin(), jplays.end());
-    sort_value_map(&vecplays);
+    
+    vector<pair<string, int>> vecplays(totalplay.begin(), totalplay.end());
+    sort(vecplays.begin(), vecplays.end(), comp);
     
     for(int i = 0; i<vecplays.size(); i++){
-        string nowgen = vecplays[i].first;
-        vector<int> max2;
-        for(int j = 0; j<plays.size(); j++){
-            if(genres[j].compare(nowgen)){
-                continue;
+        sort(mymap[vecplays[i].first].begin(), mymap[vecplays[i].first].end(), comp2);
+        for(int j = 0; j<2; j++){
+            if(j >= (int)mymap[vecplays[i].first].size()){
+                break;
             }
-            int nowplays = plays[j];
-            if(max2.size() == 0){
-                max2.push_back(j);
-            }else if(max2.size() == 1){
-                if(nowplays <= plays[max2[0]]){
-                    max2.push_back(j);
-                }else{
-                    int temp = max2[0];
-                    max2[0] = j;
-                    max2.push_back(temp);
-                }
-            }else{
-                int maxn1 = max2[0];
-                int maxn2 = max2[1];
-                if(nowplays <= plays[maxn2]){
-                    continue;
-                }else if(nowplays <= plays[maxn1]){
-                    max2[1] = j;
-                    continue;
-                }else{
-                    max2[0] = j;
-                    max2[1] = maxn1;
-                }
-            }
-            
+            answer.push_back(mymap[vecplays[i].first][j].first);
         }
-        if(max2.size() == 2){
-            answer.push_back(max2[0]);
-            answer.push_back(max2[1]);
-        }else{
-            answer.push_back(max2[0]);
-        }
-                
     }
     
     return answer;
