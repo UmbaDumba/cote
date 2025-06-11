@@ -5,38 +5,45 @@
 
 using namespace std;
 
-bool comp(string a, string b){
-    if((a + b) > (b + a)){
+bool mycom(string a, string b)
+{
+    string ab = a + b;
+    string ba = b + a;
+    
+    //cout << "ab : " << ab << " ba : "<<ba<<endl;
+    
+    if( (ab) > (ba) ){
         return true;
     }else{
         return false;
     }
-    
-    
 }
-
-
 
 string solution(vector<int> numbers) {
     string answer = "";
-    vector<string> snums;
     
-    for(int i = 0; i<numbers.size(); i++){
-        snums.push_back(to_string(numbers[i]));
+    vector<string>strnums;
+    for(int i = 0; i<numbers.size(); i++)
+    {
+        char tmp[5];
+        sprintf(tmp, "%d", numbers[i]);
+        
+        string tmp2 = tmp;
+        strnums.push_back(tmp2);
     }
     
-    sort(snums.begin(), snums.end(), comp);
+    sort(strnums.begin(), strnums.end(), mycom);
+    //sort(strnums.begin(), strnums.end(), greater<>());
     
-    //cout << ("30" > "3") << endl;
+    for(int i = 0; i<strnums.size(); i++)
+    {
+        answer += strnums[i];
+    }
     
-    if(!snums[0].compare("0")){
+    if(answer[0] == '0')
+    {
         return "0";
     }
-    
-    for(int i = 0; i<snums.size(); i++){
-        answer += snums[i];
-    }
-    
     
     return answer;
 }
