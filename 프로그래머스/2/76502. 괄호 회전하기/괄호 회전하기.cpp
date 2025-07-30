@@ -1,51 +1,34 @@
 #include <string>
 #include <vector>
 #include <stack>
-#include <unordered_map>
-#include <iostream>
-#include <queue>
 
 using namespace std;
 
-unordered_map<char, char> maps = {{'(', ')'}, {'{', '}'}, {'[', ']'}};
-
-
-
-bool is_ok(string s){
-    stack<char> mystack;
-    for(int i = 0; i<s.size(); i++){
-        if((s[i] == '(') || (s[i] == '{') || (s[i] == '[')){
-            mystack.push(s[i]);
-        }else if(mystack.empty()){
-            return false;
-        }else{
-            char now = mystack.top();
-            if(maps[now] == s[i]){
-                mystack.pop();
-            }else{
-                return false;
-            }
-        }
-    }
-    if(mystack.empty()){
-        return true;
-    }
-    return false;
-    
-}
-
 int solution(string s) {
     int answer = 0;
-    int n = s.size() - 1;
-    int m = s.size();
+    int n = s.size();
     
-    for(int i = 0; i<m; i++){
-        if(is_ok(s)){
-            answer++;
+    for(int i = 0; i<n; i++){
+        stack<char> st; 
+        for(int j = 0; j<n; j++){
+            char tmp = s[(i+j) % n];
+            char stop = st.top();
+            
+            switch(tmp){
+                case ')': if(stop == '(') st.pop();
+                    else st.push(tmp);
+                    break;
+                case ']': if(stop == '[') st.pop();
+                    else st.push(tmp);
+                    break;
+                case '}': if(stop == '{') st.pop();
+                    else st.push(tmp);
+                    break;
+                default: st.push(tmp);
+            }
         }
-        string ss = s.substr(1, n);
-        ss.push_back(s[0]);
-        s = ss;
+        
+        if(st.size() == 0) answer++;
     }
     
     
